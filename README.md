@@ -222,9 +222,9 @@ python web_app_simple.py
 
 ## 📝 LICENCE & CREDITS
 
-**Phát triển bởi**: V.DUY
+**Phát triển bởi**: doduchung
 **Phiên bản**: 1.0  
-**Ngày cập nhật**: 14/10/2025  
+**Ngày cập nhật**: 01/06/2026 
 **Công nghệ**: YOLO + OpenCV + Flask + Web Technologies  
 
 **Đặc biệt cảm ơn**:  
