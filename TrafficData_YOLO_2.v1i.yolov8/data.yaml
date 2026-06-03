@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 5
+names: ['Bus', 'Car', 'Cycle', 'Truck', 'Van']
+
+roboflow:
+  workspace: traffic-management-wxhga
+  project: trafficdata_yolo_2
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/traffic-management-wxhga/trafficdata_yolo_2/dataset/1

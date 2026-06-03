@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-video me-2"></i>Video Xử Lý</h5>
+            </div>
+            <div class="card-body">
+                <div class="video-container">
+                    <div id="video-placeholder" class="video-placeholder">
+                        <div class="text-center">
+                            <i class="fas fa-upload fa-3x mb-3"></i>
+                            <p>Chọn video để bắt đầu xử lý</p>
+                        </div>
+                    </div>
+                    <div id="video-stream" style="display: none;">
+                        <img id="video-frame" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-cogs me-2"></i>Điều Khiển</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form id="upload-form" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="video-file" class="form-label">Chọn Video</label>
+                                <input type="file" class="form-control" id="video-file" accept="video/*" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100" id="start-btn">
+                                <i class="fas fa-play me-2"></i>Bắt Đầu
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-danger" id="stop-btn" disabled>
+                                <i class="fas fa-stop me-2"></i>Dừng
+                            </button>
+                            <button type="button" class="btn btn-warning" id="reset-btn" disabled>
+                                <i class="fas fa-refresh me-2"></i>Reset Phiên
+                            </button>
+                            <button type="button" class="btn btn-info" id="line-btn" disabled>
+                                <i class="fas fa-ruler me-2"></i>Vạch Đếm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Trạng Thái</h5>
+            </div>
+            <div class="card-body">
+                <div class="status-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>Trạng thái hệ thống:</span>
+                        <span id="system-status">
+                            <span class="status-indicator status-stopped"></span>
+                            Dừng
+                        </span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Xe đã qua vạch:</label>
+                        <div class="h4 text-primary" id="crossed-count">0</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Xe phát hiện:</label>
+                        <div class="h5 text-info" id="detected-count">0</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Phiên hiện tại:</label>
+                        <div class="h5 text-success" id="session-count">0</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái giao thông:</label>
+                        <div class="h5" id="traffic-status">THÔNG THOÁNG</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Hướng Dẫn</h5>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>Chọn file video từ máy tính</li>
+                    <li>Nhấn "Bắt Đầu" để xử lý</li>
+                    <li>Nhấn "Vạch Đếm" để điều chỉnh vạch</li>
+                    <li>Xem kết quả đếm xe realtime</li>
+                    <li>Nhấn "Dừng" để lưu kết quả</li>
+                </ol>
+                <div class="alert alert-info mt-3">
+                    <strong>Quy tắc:</strong><br>
+                    • < 10 xe: THÔNG THOÁNG 🟢<br>
+                    • 10-15 xe: BÌNH THƯỜNG 🟡<br>
+                    • > 15 xe: TẮC ĐƯỜNG 🔴
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Line Drawing Modal -->
+<div class="modal fade" id="lineModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Vẽ Vạch Đếm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Nhấn chuột trái 2 lần trên video để vẽ vạch đếm:</p>
+                <ul>
+                    <li>Lần 1: Chọn điểm đầu</li>
+                    <li>Lần 2: Chọn điểm cuối</li>
+                </ul>
+                <div class="alert alert-warning">
+                    Vạch sẽ được tạo tự động sau khi chọn 2 điểm.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let isProcessing = false;
+let lineDrawingMode = false;
+let linePoints = [];
+
+document.getElementById('upload-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    startProcessing();
+});
+
+document.getElementById('stop-btn').addEventListener('click', stopProcessing);
+document.getElementById('reset-btn').addEventListener('click', resetSession);
+document.getElementById('line-btn').addEventListener('click', toggleLineDrawing);
+
+function startProcessing() {
+    const fileInput = document.getElementById('video-file');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Vui lòng chọn file video!');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('video', file);
+    
+    fetch('/start_processing', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            isProcessing = true;
+            updateUI();
+            startStatusUpdates();
+        } else {
+            alert('Lỗi: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Có lỗi xảy ra!');
+    });
+}
+
+function stopProcessing() {
+    fetch('/stop_processing', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        isProcessing = false;
+        updateUI();
+        alert('Đã dừng và lưu kết quả!');
+    });
+}
+
+function resetSession() {
+    fetch('/reset_session', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateStatus();
+        alert('Đã reset phiên hiện tại!');
+    });
+}
+
+function toggleLineDrawing() {
+    if (!isProcessing) {
+        alert('Vui lòng bắt đầu xử lý video trước!');
+        return;
+    }
+    
+    lineDrawingMode = !lineDrawingMode;
+    if (lineDrawingMode) {
+        document.getElementById('line-btn').classList.add('active');
+        document.getElementById('line-btn').innerHTML = '<i class="fas fa-ruler me-2"></i>Đang Vẽ...';
+        document.getElementById('video-frame').style.cursor = 'crosshair';
+        
+        // Add click event listener
+        document.getElementById('video-frame').addEventListener('click', handleVideoClick);
+    } else {
+        document.getElementById('line-btn').classList.remove('active');
+        document.getElementById('line-btn').innerHTML = '<i class="fas fa-ruler me-2"></i>Vạch Đếm';
+        document.getElementById('video-frame').style.cursor = 'default';
+        
+        // Remove click event listener
+        document.getElementById('video-frame').removeEventListener('click', handleVideoClick);
+        linePoints = [];
+    }
+}
+
+function handleVideoClick(event) {
+    if (!lineDrawingMode) return;
+    
+    const rect = event.target.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    linePoints.push({x: x, y: y});
+    
+    if (linePoints.length === 1) {
+        alert('Đã chọn điểm 1. Nhấn điểm thứ 2.');
+    } else if (linePoints.length === 2) {
+        // Send line data to server
+        fetch('/set_line', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                start_x: linePoints[0].x,
+                start_y: linePoints[0].y,
+                end_x: linePoints[1].x,
+                end_y: linePoints[1].y
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Đã vẽ vạch đếm thành công!');
+            toggleLineDrawing(); // Turn off drawing mode
+        });
+        
+        linePoints = [];
+    }
+}
+
+function updateUI() {
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const lineBtn = document.getElementById('line-btn');
+    const videoPlaceholder = document.getElementById('video-placeholder');
+    const videoStream = document.getElementById('video-stream');
+    
+    if (isProcessing) {
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        resetBtn.disabled = false;
+        lineBtn.disabled = false;
+        videoPlaceholder.style.display = 'none';
+        videoStream.style.display = 'block';
+    } else {
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        resetBtn.disabled = true;
+        lineBtn.disabled = true;
+        videoPlaceholder.style.display = 'block';
+        videoStream.style.display = 'none';
+    }
+}
+
+function updateStatus() {
+    fetch('/get_status')
+    .then(response => response.json())
+    .then(data => {
+        if (data.status !== 'Không hoạt động') {
+            document.getElementById('crossed-count').textContent = data.total_count || 0;
+            document.getElementById('detected-count').textContent = data.total_detected || 0;
+            document.getElementById('session-count').textContent = data.current_session_count || 0;
+            document.getElementById('traffic-status').textContent = data.status || 'THÔNG THOÁNG';
+            
+            const systemStatus = document.getElementById('system-status');
+            systemStatus.innerHTML = '<span class="status-indicator status-running"></span>Đang chạy';
+        } else {
+            document.getElementById('crossed-count').textContent = '0';
+            document.getElementById('detected-count').textContent = '0';
+            document.getElementById('session-count').textContent = '0';
+            document.getElementById('traffic-status').textContent = 'THÔNG THOÁNG';
+            
+            const systemStatus = document.getElementById('system-status');
+            systemStatus.innerHTML = '<span class="status-indicator status-stopped"></span>Dừng';
+        }
+    });
+}
+
+function startStatusUpdates() {
+    setInterval(updateStatus, 1000); // Update every second
+}
+
+// Initial update
+updateStatus();
+</script>
+{% endblock %}

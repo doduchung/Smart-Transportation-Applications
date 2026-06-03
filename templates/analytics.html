@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Thống Kê - Hệ Thống Đếm Phương Tiện{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Phân Tích & Thống Kê</h5>
+            </div>
+            <div class="card-body">
+                {% if chart1 %}
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Thống Kê Xe Theo Ngày</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="chart1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Tần Suất Tắc Đường</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="chart2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Phân Bố Trạng Thái</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="chart3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if daily_stats %}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Bảng Thống Kê Chi Tiết</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Ngày</th>
+                                                <th>Tổng xe</th>
+                                                <th>Trung bình xe</th>
+                                                <th>Số phiên</th>
+                                                <th>Lần tắc đường</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for stat in daily_stats %}
+                                            <tr>
+                                                <td>{{ stat.date }}</td>
+                                                <td><span class="badge bg-primary">{{ stat.Total_Vehicles }}</span></td>
+                                                <td><span class="badge bg-info">{{ stat.Avg_Vehicles }}</span></td>
+                                                <td><span class="badge bg-success">{{ stat.Sessions }}</span></td>
+                                                <td>
+                                                    {% if stat.Traffic_Jams > 0 %}
+                                                        <span class="badge bg-danger">{{ stat.Traffic_Jams }}</span>
+                                                    {% else %}
+                                                        <span class="badge bg-success">0</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-chart-bar fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">Chưa có dữ liệu để phân tích</h4>
+                    <p class="text-muted">Hãy chạy hệ thống và tạo dữ liệu lịch sử trước.</p>
+                    <a href="/" class="btn btn-primary me-2">
+                        <i class="fas fa-play me-2"></i>Bắt đầu xử lý
+                    </a>
+                    <a href="/history" class="btn btn-outline-primary">
+                        <i class="fas fa-history me-2"></i>Xem lịch sử
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+{% if daily_stats %}
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-day fa-2x mb-2"></i>
+                <h4>{{ daily_stats|length }}</h4>
+                <p class="mb-0">Ngày có dữ liệu</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-car fa-2x mb-2"></i>
+                <h4>{{ daily_stats|sum(attribute='Total_Vehicles') }}</h4>
+                <p class="mb-0">Tổng xe đếm được</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-2x mb-2"></i>
+                <h4>{{ "%.1f"|format(daily_stats|sum(attribute='Avg_Vehicles') / daily_stats|length if daily_stats else 0) }}</h4>
+                <p class="mb-0">Trung bình xe/ngày</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                <h4>{{ daily_stats|sum(attribute='Traffic_Jams') }}</h4>
+                <p class="mb-0">Lần tắc đường</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if chart1 %}
+<script>
+// Render charts
+const chart1 = {{ chart1|safe }};
+const chart2 = {{ chart2|safe }};
+const chart3 = {{ chart3|safe }};
+
+Plotly.newPlot('chart1', chart1.data, chart1.layout, {responsive: true});
+Plotly.newPlot('chart2', chart2.data, chart2.layout, {responsive: true});
+Plotly.newPlot('chart3', chart3.data, chart3.layout, {responsive: true});
+
+// Make charts responsive
+window.addEventListener('resize', function() {
+    Plotly.Plots.resize('chart1');
+    Plotly.Plots.resize('chart2');
+    Plotly.Plots.resize('chart3');
+});
+</script>
+{% endif %}
+
+<script>
+// Auto refresh every 60 seconds
+setInterval(() => {
+    if (!document.hidden) {
+        location.reload();
+    }
+}, 60000);
+
+// Add some interactivity
+document.addEventListener('DOMContentLoaded', function() {
+    // Add loading states to charts
+    const charts = ['chart1', 'chart2', 'chart3'];
+    charts.forEach(chartId => {
+        const element = document.getElementById(chartId);
+        if (element) {
+            element.style.minHeight = '300px';
+        }
+    });
+});
+</script>
+{% endblock %}

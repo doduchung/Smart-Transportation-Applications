@@ -1,0 +1,101 @@
+[
+  {
+    "timestamp": "2025-11-13T14:15:54.562392",
+    "video_name": "7h.9.9.22.mp4",
+    "vehicles_passed_line": 6,
+    "vehicles_detected": 17,
+    "traffic_status": "THÔNG THOÁNG",
+    "total_count_all_time": 6,
+    "session_duration": "0m 10s"
+  },
+  {
+    "timestamp": "2025-11-13T14:15:59.393494",
+    "video_name": "7h.9.9.22.mp4",
+    "vehicles_passed_line": 7,
+    "vehicles_detected": 19,
+    "traffic_status": "THÔNG THOÁNG",
+    "total_count_all_time": 7,
+    "session_duration": "0m 14s"
+  },
+  {
+    "timestamp": "2025-11-13T14:16:18.253567",
+    "video_name": "7h.9.9.22.mp4",
+    "vehicles_passed_line": 33,
+    "vehicles_detected": 45,
+    "traffic_status": "TẮC ĐƯỜNG!",
+    "total_count_all_time": 33,
+    "session_duration": "0m 33s"
+  },
+  {
+    "timestamp": "2025-11-13T14:16:37.920465",
+    "video_name": "7h.9.9.22.mp4",
+    "vehicles_passed_line": 57,
+    "vehicles_detected": 68,
+    "traffic_status": "TẮC ĐƯỜNG!",
+    "total_count_all_time": 57,
+    "session_duration": "0m 53s"
+  },
+  {
+    "timestamp": "2025-11-13T14:17:02.499487",
+    "video_name": "7h.9.9.22.mp4",
+    "vehicles_passed_line": 86,
+    "vehicles_detected": 95,
+    "traffic_status": "TẮC ĐƯỜNG!",
+    "total_count_all_time": 86,
+    "session_duration": "1m 17s"
+  },
+  {
+    "timestamp": "2025-11-13T14:17:04.516548",
+    "video_name": "7h.9.9.22.mp4",
+    "vehicles_passed_line": 87,
+    "vehicles_detected": 97,
+    "traffic_status": "TẮC ĐƯỜNG!",
+    "total_count_all_time": 87,
+    "session_duration": "1m 20s"
+  },
+  {
+    "timestamp": "2025-11-13T14:17:04.537590",
+    "video_name": "7h.9.9.22.mp4",
+    "vehicles_passed_line": 87,
+    "vehicles_detected": 97,
+    "traffic_status": "TẮC ĐƯỜNG!",
+    "total_count_all_time": 87,
+    "session_duration": "1m 20s"
+  },
+  {
+    "timestamp": "2025-11-13T14:17:46.733406",
+    "video_name": "7h30.21.9.22.mp4",
+    "vehicles_passed_line": 180,
+    "vehicles_detected": 196,
+    "traffic_status": "TẮC ĐƯỜNG!",
+    "total_count_all_time": 180,
+    "session_duration": "0m 32s"
+  },
+  {
+    "timestamp": "2025-11-13T14:17:50.222918",
+    "video_name": "7h30.21.9.22.mp4",
+    "vehicles_passed_line": 183,
+    "vehicles_detected": 198,
+    "traffic_status": "TẮC ĐƯỜNG!",
+    "total_count_all_time": 183,
+    "session_duration": "0m 35s"
+  },
+  {
+    "timestamp": "2025-11-13T14:17:50.245140",
+    "video_name": "7h30.21.9.22.mp4",
+    "vehicles_passed_line": 183,
+    "vehicles_detected": 198,
+    "traffic_status": "TẮC ĐƯỜNG!",
+    "total_count_all_time": 183,
+    "session_duration": "0m 35s"
+  },
+  {
+    "timestamp": "2025-11-13T14:18:12.301864",
+    "video_name": "7h30.21.9.22.mp4",
+    "vehicles_passed_line": 183,
+    "vehicles_detected": 198,
+    "traffic_status": "TẮC ĐƯỜNG!",
+    "total_count_all_time": 183,
+    "session_duration": "0m 57s"
+  }
+]
